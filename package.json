@@ -1,0 +1,10 @@
+{
+  "name": "gabimoncha-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "catalog:sync": "node scripts/sync-catalog.mjs",
+    "catalog:check": "node scripts/sync-catalog.mjs --check",
+    "test": "node --test"
+  }
+}

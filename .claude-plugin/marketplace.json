@@ -1,0 +1,25 @@
+{
+  "name": "gabimoncha-skills",
+  "owner": {
+    "name": "gabimoncha"
+  },
+  "description": "Gabimoncha's personal and everyday agent skills.",
+  "plugins": [
+    {
+      "name": "everyday",
+      "displayName": "Everyday",
+      "source": "./",
+      "description": "Portable skills used across most projects.",
+      "strict": false,
+      "skills": []
+    },
+    {
+      "name": "personal",
+      "displayName": "Personal",
+      "source": "./",
+      "description": "Skills tailored to personal workflows and environments.",
+      "strict": false,
+      "skills": []
+    }
+  ]
+}
