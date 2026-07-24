@@ -3,7 +3,7 @@
   "owner": {
     "name": "gabimoncha"
   },
-  "description": "Gabimoncha's essential agent skills.",
+  "description": "Gabimoncha's authored and curated third-party essential agent skills.",
   "plugins": [
     {
       "name": "essentials",
@@ -20,6 +20,19 @@
         "./skills/essentials/implement-plan",
         "./skills/essentials/triage-codex-sessions",
         "./skills/essentials/write-music"
+      ]
+    },
+    {
+      "name": "third-party-essentials",
+      "displayName": "Third-Party Essentials",
+      "source": "./",
+      "description": "Curated upstream skills recommended for global installation.",
+      "strict": false,
+      "skills": [
+        "./skills/third-party-essentials/commit",
+        "./skills/third-party-essentials/find-docs",
+        "./skills/third-party-essentials/git-integrate",
+        "./skills/third-party-essentials/writing-great-skills"
       ]
     }
   ]

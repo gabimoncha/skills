@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "skills": {
+    "find-docs": {
+      "commit": "305dd3ca10341fd0190825417bbd7a0c861490c9",
+      "hash": "30a6cbdb7147f4b0fd312b9a86bd3ebb3dad3b1e1b460262a6f5f13c47431f76"
+    },
+    "writing-great-skills": {
+      "commit": "ed37663cc5fbef691ddfecd080dff42f7e7e350d",
+      "hash": "c2f7284bb6b5b784986857ee95d956c26be328d112645c3a731bbcb4b2c2585d"
+    },
+    "commit": {
+      "commit": "5a4be517989496d0bc59520a93976360dd1bff51",
+      "hash": "fc3e3d2138203bbca512528784a73d1a277b9ad347f69f538a7ca42a86318a08"
+    },
+    "git-integrate": {
+      "commit": "5a4be517989496d0bc59520a93976360dd1bff51",
+      "hash": "8f42e9a94e989ca3e9ace4fdda717183ef3a232e92d6afbd7afcf3a42128c5c2"
+    }
+  }
+}

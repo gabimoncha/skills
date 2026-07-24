@@ -40,14 +40,14 @@ async function addSkill(
   repoRoot,
   collection,
   skillName,
-  { frontmatter = "" } = {},
+  { frontmatter = "", name = skillName } = {},
 ) {
   const skillDirectory = path.join(repoRoot, "skills", collection, skillName);
   await mkdir(skillDirectory, { recursive: true });
 
   await writeFile(
     path.join(skillDirectory, "SKILL.md"),
-    `---\nname: ${skillName}\ndescription: A fixture skill for catalog workflow testing.\n${frontmatter}---\n\n# ${skillName}\n`,
+    `---\nname: ${name}\ndescription: A fixture skill for catalog workflow testing.\n${frontmatter}---\n\n# ${skillName}\n`,
   );
 }
 
@@ -93,11 +93,16 @@ test("maintainer commands publish collection skills and detect catalog drift", a
     marketplace.plugins.map((plugin) => [plugin.displayName, plugin.skills]),
   );
 
+  assert.deepEqual(
+    marketplace.plugins.map((plugin) => plugin.displayName),
+    ["Essentials", "Third-Party Essentials"],
+  );
   assert.deepEqual(skillsByCollection.get("Essentials"), [
     "./skills/essentials/alpha-public",
     "./skills/essentials/unrelated-internal-setting",
     "./skills/essentials/zebra-public",
   ]);
+  assert.deepEqual(skillsByCollection.get("Third-Party Essentials"), []);
   assert.doesNotMatch(firstCatalog, /(?:block|inline)-internal/);
 
   const secondSync = run("bun", ["run", "catalog:sync"], fixtureRoot);
@@ -127,4 +132,32 @@ test("maintainer commands publish collection skills and detect catalog drift", a
   assert.notEqual(staleCheck.status, 0);
   assert.match(commandOutput(staleCheck), /bun run catalog:sync/);
   assert.equal(await readFile(marketplacePath, "utf8"), staleCatalog);
+});
+
+test("catalog rejects duplicate skill names across collections", async (t) => {
+  const fixtureRoot = await mkdtemp(path.join(os.tmpdir(), "skills-catalog-duplicates-"));
+  t.after(() => rm(fixtureRoot, { recursive: true, force: true }));
+
+  await mkdir(path.join(fixtureRoot, "scripts"), { recursive: true });
+  await mkdir(path.join(fixtureRoot, ".claude-plugin"), { recursive: true });
+  await copyFile(
+    path.join(sourceRoot, "scripts", "sync-catalog.mjs"),
+    path.join(fixtureRoot, "scripts", "sync-catalog.mjs"),
+  );
+  await copyFile(
+    path.join(sourceRoot, "package.json"),
+    path.join(fixtureRoot, "package.json"),
+  );
+  await addSkill(fixtureRoot, "essentials", "shared-name");
+  await addSkill(
+    fixtureRoot,
+    "third-party-essentials",
+    "different-directory",
+    { name: "shared-name" },
+  );
+
+  const result = run("bun", ["run", "catalog:sync"], fixtureRoot);
+  assert.ifError(result.error);
+  assert.notEqual(result.status, 0);
+  assert.match(commandOutput(result), /Duplicate skill name "shared-name"/);
 });
