@@ -1,0 +1,7 @@
+interface:
+  display_name: "Implement Plan"
+  short_description: "Implement a plan with worker, review, and fix passes"
+  default_prompt: "Use $implement-plan to implement the approved plan from this conversation, a named plan file, or the pasted plan below."
+
+policy:
+  allow_implicit_invocation: false

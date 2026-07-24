@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex model router"
+  short_description: "Select a delegated model and effort when delegating work"
+  default_prompt: "Use $codex-model-router to select the model and reasoning effort for this delegated work, either through a Codex subagent or a new controlled session."

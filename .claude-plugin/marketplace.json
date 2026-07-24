@@ -3,23 +3,24 @@
   "owner": {
     "name": "gabimoncha"
   },
-  "description": "Gabimoncha's personal and everyday agent skills.",
+  "description": "Gabimoncha's essential agent skills.",
   "plugins": [
     {
-      "name": "everyday",
-      "displayName": "Everyday",
+      "name": "essentials",
+      "displayName": "Essentials",
       "source": "./",
-      "description": "Portable skills used across most projects.",
+      "description": "Cross-project skills recommended for global installation.",
       "strict": false,
-      "skills": []
-    },
-    {
-      "name": "personal",
-      "displayName": "Personal",
-      "source": "./",
-      "description": "Skills tailored to personal workflows and environments.",
-      "strict": false,
-      "skills": []
+      "skills": [
+        "./skills/essentials/claude-model-picker",
+        "./skills/essentials/codex-model-router",
+        "./skills/essentials/coordinate-shared-simulator",
+        "./skills/essentials/diagnose",
+        "./skills/essentials/explore-subagents",
+        "./skills/essentials/implement-plan",
+        "./skills/essentials/triage-codex-sessions",
+        "./skills/essentials/write-music"
+      ]
     }
   ]
 }

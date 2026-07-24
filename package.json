@@ -5,6 +5,6 @@
   "scripts": {
     "catalog:sync": "node scripts/sync-catalog.mjs",
     "catalog:check": "node scripts/sync-catalog.mjs --check",
-    "test": "node --test"
+    "test": "bun test"
   }
 }

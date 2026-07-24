@@ -1,0 +1,6 @@
+interface:
+  display_name: "Diagnose"
+  short_description: "Diagnose root causes and verify bug fixes"
+  default_prompt: "Use $diagnose to reproduce this bug, prove its root cause, apply the smallest authorized fix, and verify the original symptom is gone."
+policy:
+  allow_implicit_invocation: true

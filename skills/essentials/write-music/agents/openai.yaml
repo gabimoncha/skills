@@ -1,0 +1,6 @@
+interface:
+  display_name: "Write Music"
+  short_description: "Give prose rhythm, cadence, and lift"
+  default_prompt: "Use $write-music to make this prose sing while preserving its meaning and voice."
+policy:
+  allow_implicit_invocation: false

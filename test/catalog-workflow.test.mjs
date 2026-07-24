@@ -67,16 +67,15 @@ test("maintainer commands publish collection skills and detect catalog drift", a
   );
 
   // Create entries out of lexical order so deterministic sorting is observable.
-  await addSkill(fixtureRoot, "everyday", "zebra-public");
-  await addSkill(fixtureRoot, "everyday", "alpha-public");
-  await addSkill(fixtureRoot, "personal", "personal-public");
-  await addSkill(fixtureRoot, "personal", "block-internal", {
+  await addSkill(fixtureRoot, "essentials", "zebra-public");
+  await addSkill(fixtureRoot, "essentials", "alpha-public");
+  await addSkill(fixtureRoot, "essentials", "block-internal", {
     frontmatter: "metadata:\n  internal: true\n",
   });
-  await addSkill(fixtureRoot, "personal", "inline-internal", {
+  await addSkill(fixtureRoot, "essentials", "inline-internal", {
     frontmatter: "metadata: { internal: true }\n",
   });
-  await addSkill(fixtureRoot, "personal", "unrelated-internal-setting", {
+  await addSkill(fixtureRoot, "essentials", "unrelated-internal-setting", {
     frontmatter: "settings:\n  internal: true\n",
   });
 
@@ -94,13 +93,10 @@ test("maintainer commands publish collection skills and detect catalog drift", a
     marketplace.plugins.map((plugin) => [plugin.displayName, plugin.skills]),
   );
 
-  assert.deepEqual(skillsByCollection.get("Everyday"), [
-    "./skills/everyday/alpha-public",
-    "./skills/everyday/zebra-public",
-  ]);
-  assert.deepEqual(skillsByCollection.get("Personal"), [
-    "./skills/personal/personal-public",
-    "./skills/personal/unrelated-internal-setting",
+  assert.deepEqual(skillsByCollection.get("Essentials"), [
+    "./skills/essentials/alpha-public",
+    "./skills/essentials/unrelated-internal-setting",
+    "./skills/essentials/zebra-public",
   ]);
   assert.doesNotMatch(firstCatalog, /(?:block|inline)-internal/);
 
@@ -119,10 +115,10 @@ test("maintainer commands publish collection skills and detect catalog drift", a
   assertCommandSucceeded(validation, "claude plugin validate");
 
   const staleMarketplace = JSON.parse(firstCatalog);
-  const everyday = staleMarketplace.plugins.find(
-    (plugin) => plugin.displayName === "Everyday",
+  const essentials = staleMarketplace.plugins.find(
+    (plugin) => plugin.displayName === "Essentials",
   );
-  everyday.skills.push("./skills/everyday/removed-skill");
+  essentials.skills.push("./skills/essentials/removed-skill");
   const staleCatalog = `${JSON.stringify(staleMarketplace, null, 2)}\n`;
   await writeFile(marketplacePath, staleCatalog);
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model picker"
+  short_description: "Select a delegated model and effort"
+  default_prompt: "Use $model-picker to select the model and reasoning effort for this delegated work."

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Explore subagents"
+  short_description: "Use subagents to explore the codebase"
+  default_prompt: "Use $explore-subagents with gpt-5.6-luna subagents to answer these independent codebase questions and summarize the evidence."
+
+policy:
+  allow_implicit_invocation: true

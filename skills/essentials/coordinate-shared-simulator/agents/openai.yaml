@@ -1,0 +1,7 @@
+interface:
+  display_name: "Coordinate Shared Simulator"
+  short_description: "Lease one simulator across Codex tasks"
+  default_prompt: "Use $coordinate-shared-simulator to coordinate these Codex task IDs around one shared iOS simulator."
+
+policy:
+  allow_implicit_invocation: false

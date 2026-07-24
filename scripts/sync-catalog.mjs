@@ -8,14 +8,9 @@ const checkOnly = process.argv.includes("--check");
 
 const collections = [
   {
-    name: "everyday",
-    displayName: "Everyday",
-    description: "Portable skills used across most projects.",
-  },
-  {
-    name: "personal",
-    displayName: "Personal",
-    description: "Skills tailored to personal workflows and environments.",
+    name: "essentials",
+    displayName: "Essentials",
+    description: "Cross-project skills recommended for global installation.",
   },
 ];
 
@@ -100,7 +95,7 @@ const marketplace = {
   owner: {
     name: "gabimoncha",
   },
-  description: "Gabimoncha's personal and everyday agent skills.",
+  description: "Gabimoncha's essential agent skills.",
   plugins,
 };
 
