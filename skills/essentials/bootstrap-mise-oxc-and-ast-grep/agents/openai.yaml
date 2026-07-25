@@ -1,0 +1,7 @@
+interface:
+  display_name: "Bootstrap Mise, Oxc, and ast-grep"
+  short_description: "Bootstrap or improve modern repo tooling"
+  default_prompt: "Use $bootstrap-mise-oxc-and-ast-grep to audit this repository and bootstrap or improve its mise, hk, ast-grep, React Doctor, Oxlint, and Oxfmt setup."
+
+policy:
+  allow_implicit_invocation: false

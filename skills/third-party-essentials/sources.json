@@ -48,6 +48,18 @@
         "spdx": "MIT",
         "file": "LICENSE"
       }
+    },
+    {
+      "name": "ast-grep",
+      "repo": "https://github.com/ast-grep/agent-skill.git",
+      "path": "ast-grep/skills/ast-grep",
+      "ref": "main",
+      "author": "Herrington Darkholme",
+      "homepage": "https://github.com/ast-grep/agent-skill",
+      "license": {
+        "spdx": "MIT",
+        "file": "README.md"
+      }
     }
   ]
 }

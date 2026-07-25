@@ -16,6 +16,10 @@
     "git-integrate": {
       "commit": "5a4be517989496d0bc59520a93976360dd1bff51",
       "hash": "8f42e9a94e989ca3e9ace4fdda717183ef3a232e92d6afbd7afcf3a42128c5c2"
+    },
+    "ast-grep": {
+      "commit": "c2a9bc154f4ffe08b25d28d5e852dfac8c0d0d8a",
+      "hash": "44972005f841093d4789d53eade7650b3002b8f21652c93b442bd13d6e7e2351"
     }
   }
 }

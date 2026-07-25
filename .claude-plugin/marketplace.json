@@ -12,6 +12,7 @@
       "description": "Cross-project skills recommended for global installation.",
       "strict": false,
       "skills": [
+        "./skills/essentials/bootstrap-mise-oxc-and-ast-grep",
         "./skills/essentials/claude-model-picker",
         "./skills/essentials/codex-model-router",
         "./skills/essentials/coordinate-shared-simulator",
@@ -29,6 +30,7 @@
       "description": "Curated upstream skills recommended for global installation.",
       "strict": false,
       "skills": [
+        "./skills/third-party-essentials/ast-grep",
         "./skills/third-party-essentials/commit",
         "./skills/third-party-essentials/find-docs",
         "./skills/third-party-essentials/git-integrate",
