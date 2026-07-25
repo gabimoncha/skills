@@ -25,12 +25,6 @@
       "skillPath": "skills/engineering/domain-modeling/SKILL.md",
       "computedHash": "363cb0f53b0b431e7c00086ad1f823500b7e1b70b5616ee969c979f0934e9e6e"
     },
-    "find-docs": {
-      "source": "upstash/context7",
-      "sourceType": "github",
-      "skillPath": "skills/find-docs/SKILL.md",
-      "computedHash": "a6ef6cee00e9ae9b18dce7133edc403d0ba8750ef1ac5f02af80431e060dd007"
-    },
     "grill-with-docs": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -67,12 +61,6 @@
       "skillPath": "skills/engineering/research/SKILL.md",
       "computedHash": "bd3e2c6826671d82c86ed0da3dac3370ebcf63b0fe847f91bb444e1fb7dac21b"
     },
-    "resolving-merge-conflicts": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "skillPath": "skills/engineering/resolving-merge-conflicts/SKILL.md",
-      "computedHash": "28aad6f8b1b7025abc8892fa8890f68fe1533499b28a565f416b159131d22fad"
-    },
     "tdd": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -102,12 +90,6 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/wayfinder/SKILL.md",
       "computedHash": "c9e18cefd77b6b5b0ee35f59ce2fd96359aa2d2f02e3479e12c873c5402d9d43"
-    },
-    "writing-great-skills": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "skillPath": "skills/productivity/writing-great-skills/SKILL.md",
-      "computedHash": "4deb21855fb4deeeb1b8217b041faff003fd0c915d24a22f636851c520bc9c5c"
     }
   }
 }
