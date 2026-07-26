@@ -12,6 +12,7 @@
       "description": "Cross-project skills recommended for global installation.",
       "strict": false,
       "skills": [
+        "./skills/essentials/adversarial-council",
         "./skills/essentials/bootstrap-mise-oxc-and-ast-grep",
         "./skills/essentials/claude-model-picker",
         "./skills/essentials/codex-model-router",
