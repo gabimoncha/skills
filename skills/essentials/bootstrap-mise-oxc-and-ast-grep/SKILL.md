@@ -96,6 +96,9 @@ hard-code a checkout-specific path or block unrelated tool rows.
 6. Wire hooks and CI.
    - Keep hooks staged or changed-file aware when supported; reserve broader
      checks for CI or explicit full-check commands.
+   - For React scopes, apply the preferred diagnostic lifecycle in
+     [Composition and evidence](references/tool-patterns.md#composition-and-evidence);
+     record any repository-evidenced deviation in the matrix.
    - Install hk through the repository's setup path and verify the expected Git
      hook files exist and invoke hk.
    - Make CI use the same read-only command graph developers can run locally.
@@ -105,8 +108,10 @@ hard-code a checkout-specific path or block unrelated tool rows.
    Completion criterion: for adopted, improved, or retained hk, installation is
    verified from Git's configured hooks path and a safe staged-file probe
    exercises the intended route; otherwise the hk row records its skip or
-   blocker. For an established CI seam, CI invokes only read-only checks;
-   otherwise the matrix records CI as unavailable or blocked.
+   blocker. For applicable React scopes, the pre-commit, pre-push, and PR CI
+   routes satisfy the selected lifecycle and its failure probes. For an
+   established CI seam, CI invokes only read-only checks; otherwise the matrix
+   records CI as unavailable or blocked.
 
 7. Verify the integrated toolchain.
    - Run config validation, targeted checks, the public read-only aggregate,

@@ -16,12 +16,13 @@
         "./skills/essentials/bootstrap-mise-oxc-and-ast-grep",
         "./skills/essentials/claude-model-picker",
         "./skills/essentials/codex-model-router",
+        "./skills/essentials/compose-prose",
         "./skills/essentials/coordinate-shared-simulator",
         "./skills/essentials/diagnose",
         "./skills/essentials/explore-subagents",
         "./skills/essentials/implement-plan",
-        "./skills/essentials/triage-codex-sessions",
-        "./skills/essentials/write-music"
+        "./skills/essentials/optimize-skill",
+        "./skills/essentials/triage-codex-sessions"
       ]
     },
     {

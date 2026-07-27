@@ -1,0 +1,7 @@
+interface:
+  display_name: "Optimize Skill"
+  short_description: "Improve skills through controlled experiments"
+  default_prompt: "Use $optimize-skill to improve a target skill through bounded blind experiments against a frozen success rubric."
+
+policy:
+  allow_implicit_invocation: false

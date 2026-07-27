@@ -179,26 +179,27 @@ non-React packages instead of forcing a root-wide invocation.
 
 ### Integrate
 
-- Keep a full `react-doctor` manual or CI diagnostic for broad analysis.
-- Use `--scope changed` for a changed-files loop and `--staged` for hooks when
-  those modes match the repository's workflow.
-- Select a blocking threshold deliberately; record whether warnings are
-  advisory or gating before adding `--blocking`.
-- Treat the standalone CLI and the Oxlint plugin as complementary surfaces.
-  The standalone analysis is broader, so plugin enablement does not replace it.
+- Configure `oxlint-plugin-react-doctor` through Oxlint for fast rule-level
+  feedback. Keep the standalone CLI for complete scans, reports, and
+  project-level rules that are no-ops under plain Oxlint.
+- Apply the [preferred React diagnostic lifecycle](#preferred-react-diagnostic-lifecycle).
+- Keep a full standalone scan as an explicit manual diagnostic when broader
+  analysis is useful.
 - Preserve repository-specific ignores and category or rule decisions.
 
 ### Validate
 
-Run from each intended React ownership root. Check the full command separately
-from changed or staged routing, and verify that the chosen blocking threshold
-produces the intended exit status.
+Validate the Oxlint plugin and standalone CLI from each intended React ownership
+root. Check the full manual scan separately from the lifecycle routes, then
+exercise the lifecycle probes below.
 
 ### Cautions
 
 Do not run from a monorepo root if that changes discovery or hides workspace
-configuration. Avoid converting a noisy baseline into a blocking hook without
-an explicit adoption decision.
+configuration. Treat `--scope changed` as base-relative filtering, not as hook
+timing. Establish an acceptable baseline before enabling warning-level blocking;
+otherwise record the React Doctor row as blocked instead of silently weakening
+the gate.
 
 ## Oxlint
 
@@ -290,6 +291,37 @@ Change the order only when repository evidence shows a different stable graph,
 then prove the chosen graph is idempotent. hk should orchestrate staged or
 changed files; mise should expose reproducible entry points; CI should call the
 same read-only graph without hook-only mutation.
+
+### Preferred React diagnostic lifecycle
+
+Use distinct ownership by lifecycle when the React Doctor and Oxlint rows apply:
+
+1. **Pre-commit:** run staged-file Oxlint with
+   `oxlint-plugin-react-doctor`, plus adopted ast-grep scans. Keep standalone
+   React Doctor out of this fast path. If ast-grep is skipped, omit it rather
+   than creating placeholder configuration. Treat Oxfmt as a separate formatter
+   policy.
+2. **Pre-push:** run one repository-owned standalone React Doctor command with
+   `--scope changed --blocking warning`.
+3. **PR CI:** invoke that exact pre-push command through the same package script
+   or mise task, from the same ownership root and with equivalent base-branch
+   semantics.
+
+Treat this lifecycle as the default. Preserve a different established route
+only when the matrix records concrete repository evidence for the deviation
+and retains the plugin's fast feedback plus the standalone CLI's broader
+coverage.
+
+Validate the lifecycle with controlled probes:
+
+- prove pre-commit passes only eligible staged files to Oxlint and ast-grep and
+  does not launch standalone React Doctor;
+- prove one warning makes the shared pre-push/CI command exit nonzero and a
+  clean changed scope exits zero;
+- prove pre-push and PR CI resolve to the same command, working directory,
+  blocking threshold, and comparison base;
+- ensure CI fetches or otherwise exposes the comparison base required by
+  `--scope changed`.
 
 Extend CI only through a provider, action-version policy, and validation route
 already established by the repository. If the repository has no CI convention,

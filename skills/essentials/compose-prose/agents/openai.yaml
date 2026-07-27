@@ -1,0 +1,7 @@
+interface:
+  display_name: "Compose Prose"
+  short_description: "Write exact prose with force and cadence"
+  default_prompt: "Use $compose-prose to sharpen this prose and compose its cadence without changing its meaning or voice."
+
+policy:
+  allow_implicit_invocation: false
