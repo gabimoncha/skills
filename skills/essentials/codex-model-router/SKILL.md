@@ -1,6 +1,8 @@
 ---
 name: codex-model-router
 description: Use before spawning Codex subagents or delegated Codex workflows to select the supported OpenAI model and reasoning effort for the work.
+disable-model-invocation: true
+user-invocable: false
 ---
 
 # Model Router

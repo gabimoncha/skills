@@ -1,4 +1,7 @@
 interface:
-  display_name: "Model picker"
-  short_description: "Select a delegated model and effort"
-  default_prompt: "Use $model-picker to select the model and reasoning effort for this delegated work."
+  display_name: "Claude model picker"
+  short_description: "Do not use in Codex"
+  default_prompt: "When asked to use $claude-model-picker reply to the user that this is a Claude Code specific skill"
+
+policy:
+  allow_implicit_invocation: false
