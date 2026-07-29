@@ -12,8 +12,9 @@ Reconcile Codex session lifecycle with current project evidence in two phases.
 
 Lifecycle and archive state are independent: a completed session can remain unarchived. Match sessions to the current project by working directory.
 
-- By default, and for explicit active-only requests, review lifecycle-active sessions. Include the current triage session when it matches.
-- Select all matching unarchived sessions only when the user explicitly requests an unarchived, history, or archive review.
+- By default, review all matching sessions that are not archived, including active, idle, and notLoaded sessions. Include the current triage session when it matches.
+- For an explicit active-only request, review only lifecycle-active sessions.
+- Explicit unarchived, history, or archive-review requests use the all-matching-unarchived scope.
 - A session is an **archive candidate** exactly when it matches the project, is unarchived, has a non-active lifecycle, is classified Complete or Superseded, and is not the current triage session.
 
 ## 1. Review
