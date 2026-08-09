@@ -3,11 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "catalog:sync": "node scripts/sync-catalog.mjs",
-    "catalog:check": "node scripts/sync-catalog.mjs --check",
-    "third-party:sync": "node scripts/third-party-essentials.mjs sync",
-    "third-party:update": "node scripts/third-party-essentials.mjs update",
-    "third-party:check": "node scripts/third-party-essentials.mjs check",
     "test": "bun test"
   }
 }
