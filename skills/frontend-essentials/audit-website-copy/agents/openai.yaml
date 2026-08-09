@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit Website Copy"
+  short_description: "Review website copy with a critic council"
+  default_prompt: "Use $audit-website-copy to convene a critic council and produce a read-only, evidence-backed review of this website copy."

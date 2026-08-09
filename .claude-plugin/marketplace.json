@@ -3,7 +3,7 @@
   "owner": {
     "name": "gabimoncha"
   },
-  "description": "Gabimoncha's authored and curated third-party essential agent skills.",
+  "description": "Gabimoncha's authored agent skills.",
   "plugins": [
     {
       "name": "essentials",
@@ -17,26 +17,24 @@
         "./skills/essentials/claude-model-picker",
         "./skills/essentials/codex-model-router",
         "./skills/essentials/compose-prose",
-        "./skills/essentials/coordinate-shared-simulator",
         "./skills/essentials/diagnose",
         "./skills/essentials/explore-subagents",
         "./skills/essentials/implement-plan",
         "./skills/essentials/optimize-skill",
+        "./skills/essentials/orchestrate",
+        "./skills/essentials/transcribe-audio-with-codex",
         "./skills/essentials/triage-codex-sessions"
       ]
     },
     {
-      "name": "third-party-essentials",
-      "displayName": "Third-Party Essentials",
+      "name": "frontend-essentials",
+      "displayName": "Frontend Essentials",
       "source": "./",
-      "description": "Curated upstream skills recommended for global installation.",
+      "description": "Skills for frontend and mobile application work.",
       "strict": false,
       "skills": [
-        "./skills/third-party-essentials/ast-grep",
-        "./skills/third-party-essentials/commit",
-        "./skills/third-party-essentials/find-docs",
-        "./skills/third-party-essentials/git-integrate",
-        "./skills/third-party-essentials/writing-great-skills"
+        "./skills/frontend-essentials/audit-website-copy",
+        "./skills/frontend-essentials/coordinate-shared-simulator"
       ]
     }
   ]

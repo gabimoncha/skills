@@ -1,0 +1,7 @@
+interface:
+  display_name: "Orchestrate"
+  short_description: "Run plan, build, review, fix, and QA lanes"
+  default_prompt: "Use $orchestrate factory to deliver the supplied work through planning, implementation, review, fixes, and QA."
+
+policy:
+  allow_implicit_invocation: false

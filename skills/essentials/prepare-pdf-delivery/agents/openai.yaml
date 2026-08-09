@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prepare PDF Delivery"
+  short_description: "Inspect and visually prove a PDF before delivery"
+  default_prompt: "Use $prepare-pdf-delivery to prepare or inspect the requested PDF and report exact delivery evidence and gaps."
+
+policy:
+  allow_implicit_invocation: false

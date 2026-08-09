@@ -1,0 +1,7 @@
+interface:
+  display_name: "Transcribe Audio with Codex"
+  short_description: "Transcribe, summarize, and extract action items"
+  default_prompt: "Use $transcribe-audio-with-codex to transcribe these media files without launching the Codex app, preserve the raw transcripts, and create grounded summary and actionable-items files beside each transcript."
+
+policy:
+  allow_implicit_invocation: true

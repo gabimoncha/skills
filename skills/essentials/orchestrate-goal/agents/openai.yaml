@@ -1,0 +1,7 @@
+interface:
+  display_name: "Orchestrate Goal"
+  short_description: "Coordinate explicit long-running Codex goals"
+  default_prompt: "Use $orchestrate-goal to coordinate this explicit long-running goal through bounded subagents and only genuinely useful durable side tasks."
+
+policy:
+  allow_implicit_invocation: false
