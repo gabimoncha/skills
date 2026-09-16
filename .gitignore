@@ -1,2 +1,5 @@
 # macOS
 .DS_Store
+
+# Local skill evaluation artifacts
+/skills/essentials/learn-from-code/workspace/

@@ -20,6 +20,7 @@
         "./skills/essentials/diagnose",
         "./skills/essentials/explore-subagents",
         "./skills/essentials/implement-plan",
+        "./skills/essentials/learn-from-code",
         "./skills/essentials/optimize-skill",
         "./skills/essentials/orchestrate",
         "./skills/essentials/transcribe-audio-with-codex",

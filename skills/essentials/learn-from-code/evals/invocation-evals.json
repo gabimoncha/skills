@@ -1,0 +1,46 @@
+{
+  "skill_name": "learn-from-code",
+  "model_matrix": "model-matrix.json",
+  "variants": ["with_skill"],
+  "evals": [
+    {
+      "id": 4,
+      "name": "bare-local-invocation",
+      "prompt": "$learn-from-code",
+      "expected_output": "The skill discovers staged, unstaged and untracked source changes, chooses useful lessons without asking for topics or targets, and saves an unassessed learning record without modifying the code or staging state.",
+      "files": ["evals/files/bare-local-invocation/cart.py", "evals/files/bare-local-invocation/pricing.py", "evals/files/bare-local-invocation/.gitignore"],
+      "changes": [
+        {"source": "evals/changes/shared-default.py", "target": "cart.py", "staged": true},
+        {"source": "evals/changes/inplace-sort.py", "target": "pricing.py"},
+        {"source": "evals/changes/aliasing.py", "target": "draft.py"}
+      ],
+      "assertions": [
+        "Begin an educational review without requesting learning topics, experience level, or code targets from the user.",
+        "Identify and explain the shared mutable default introduced in staged cart.py.",
+        "Identify and explain that unstaged pricing.py now sorts its caller's list in place and returns None.",
+        "Include untracked draft.py and explain that original and updated alias the same list, so the claimed original snapshot also changes.",
+        "Create LEARN.md with evidence-linked lessons and pending practice, without claiming the user demonstrated understanding.",
+        "In explanations and saved answer keys about consecutive mutable-default calls, distinguish values observed immediately after each call from saved references observed after both calls; those saved references share the final list.",
+        "Proposed fixes for draft.py preserve an original snapshot independent of later top-level mutations of the caller's list, and explain that shallow copies still share nested objects; do not present the caller's original list as an independent snapshot."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "pr-context-invocation",
+      "prompt": "$learn-from-code I've just started learning Python and object ownership.",
+      "context": "This task is reviewing PR #17. Its already-fetched base is review-base and head is review-head in the fixture repository. Use these local refs as the PR diff; no remote access or publishing is needed. There is no earlier conversation in this task.",
+      "expected_output": "The skill uses the PR context, explains the change through the optional learning topics, excludes unrelated local edits, and saves learning notes without requiring a more detailed prompt.",
+      "files": ["evals/files/pr-context-invocation/cart.py", "evals/files/pr-context-invocation/scratch.py", "evals/files/pr-context-invocation/.gitignore"],
+      "base_ref": "review-base",
+      "head_ref": "review-head",
+      "head_changes": [{"source": "evals/changes/shared-default.py", "target": "cart.py"}],
+      "changes": [{"source": "evals/changes/unrelated.py", "target": "scratch.py"}],
+      "assertions": [
+        "Use the review-base to review-head PR change as the review scope without asking for a target.",
+        "Explain the PR's shared mutable default and its object-lifetime consequences in plain language suited to the optional Python and ownership learning goals.",
+        "Keep the unrelated local scratch.py edit out of the review's findings and learning records.",
+        "Save LEARN.md with an evidence-linked lesson and practice prompt without claiming demonstrated learner understanding."
+      ]
+    }
+  ]
+}

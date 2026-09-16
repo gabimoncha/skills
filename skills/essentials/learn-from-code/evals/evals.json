@@ -1,0 +1,57 @@
+{
+  "skill_name": "learn-from-code",
+  "model_matrix": "model-matrix.json",
+  "evals": [
+    {
+      "id": 1,
+      "name": "first-review",
+      "prompt": "I've just switched from JavaScript to Python. Could you review cart.py as a learning exercise? Focus on state lifetime and mutation: explain what is sound, what should change, and why. Save useful lessons in LEARN.md and keep that file out of Git. Leave the implementation alone for now. This is coding session cart-2026-09-16; I haven't answered any practice questions yet.",
+      "expected_output": "An evidence-linked learning review explains the shared default-list bug and the fresh-result behavior of discounted_prices, gives a minimal correction, and saves usable learning notes without asserting learner mastery or editing the implementation.",
+      "files": [
+        "evals/files/first-review/cart.py",
+        "evals/files/first-review/.gitignore"
+      ],
+      "assertions": [
+        "Explain that the default list is created once and reused across omitted-argument calls, with a minimal fresh-list correction.",
+        "Explain that discounted_prices creates a new result list without mutating numeric input prices, and distinguish this from caller-owned mutation in add_item.",
+        "Track coding encounters separately from learner understanding: each new concept has one encounter and no completed learner practice or demonstrated mastery.",
+        "Give each recorded new concept a usable practice question and a checkable answer kept separate from the question.",
+        "Save durable lessons with concrete cart.py evidence and explain required corrections separately from contextual design choices."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "shared-concept",
+      "prompt": "Review build_catalog in catalog.py for learning. I used AI to write this in project B; I already studied shared mutable defaults in project A, so please focus on anything new. My LEARN.md points to the shared notebook I want you to update. This is coding session catalog-2026-09-16. I'm not asking for code edits or Git synchronization.",
+      "expected_output": "The review follows the notebook pointer, associates this example with the existing concept, preserves previous demonstrated understanding and review history, records one new encounter, and avoids turning AI-written code into a learner-success claim or a duplicate lesson.",
+      "files": [
+        "evals/files/shared-concept/project/catalog.py",
+        "evals/files/shared-concept/project/LEARN.md",
+        "evals/files/shared-concept/project/.gitignore",
+        "evals/files/shared-concept/notebook/LEARN.md"
+      ],
+      "assertions": [
+        "Reuse L001 for default-argument state lifetime and increase its encounter count from two to three, without creating a duplicate concept for that mechanism.",
+        "Preserve L001 demonstrated status, last-practiced date 2026-09-15, and next-review date 2026-09-22.",
+        "Do not claim new learner understanding, successful transfer, or a completed attempt from the AI-authored project B code.",
+        "Preserve both project A history entries, the personal note, and a project-local pointer rather than duplicating progress locally.",
+        "Focus on new conditions or API tradeoffs in build_catalog rather than repeat the full previously demonstrated mutable-default lesson."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "practice-only",
+      "prompt": "I'd like to practice Python list aliasing. I don't have code to review or an existing learning notebook. Please start a local LEARN.md for this topic and ask me one question at a time. Wait for my answer before explaining the solution.",
+      "expected_output": "The agent starts practice and a notebook without requesting source code, asks one focused question, withholds its solution in the user-facing response, and fabricates neither a coding encounter nor a completed learner attempt.",
+      "files": [
+        "evals/files/practice-only/.gitignore"
+      ],
+      "assertions": [
+        "Ask one focused list-aliasing question without revealing its answer in the user-facing reply or requiring project code.",
+        "Create a local LEARN.md with zero coding encounters for this practice-only introduction.",
+        "Record no completed attempt, last-practiced date, or demonstrated understanding before the learner responds.",
+        "Leave a usable pending practice record without invented project evidence or unfilled template placeholders."
+      ]
+    }
+  ]
+}
