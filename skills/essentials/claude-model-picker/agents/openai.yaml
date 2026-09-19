@@ -1,7 +1,0 @@
-interface:
-  display_name: "Claude model picker"
-  short_description: "Do not use in Codex"
-  default_prompt: "When asked to use $claude-model-picker reply to the user that this is a Claude Code specific skill"
-
-policy:
-  allow_implicit_invocation: false

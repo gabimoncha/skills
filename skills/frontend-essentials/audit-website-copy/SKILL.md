@@ -1,6 +1,6 @@
 ---
 name: audit-website-copy
-description: Audit website copy through an independent critic council and final arbiter, using compose-prose as the prose rubric. Use for read-only website copy reviews.
+description: Audit website copy through an independent critic council and final arbiter. Use for read-only website copy reviews.
 ---
 
 # Audit Website Copy
@@ -12,17 +12,12 @@ proposal.
 
 ## 1. Establish the score
 
-1. Resolve and read the complete `compose-prose/SKILL.md`.
-   - Prefer a path supplied by the user.
-   - Otherwise locate an installed sibling skill named `compose-prose`.
-   - If it is unavailable, pause and ask for its path or installation. Use the
-     actual skill as the single source of truth for the cadence rubric.
-2. Read the repository instructions, copy or locale sources, rendered section
+1. Read the repository instructions, copy or locale sources, rendered section
    order, and any specification, brand, audience, or localization guidance that
    constrains the page.
-3. Record the starting worktree state when the copy lives in a Git repository.
+2. Record the starting worktree state when the copy lives in a Git repository.
    Make no review-caused changes and track any concurrent drift.
-4. Build a scope ledger with every in-scope route, section, locale, source file,
+3. Build a scope ledger with every in-scope route, section, locale, source file,
    metadata surface, and fixed requirement. Distinguish:
    - narrative prose eligible for the full cadence rubric;
    - interface fragments such as headings, labels, navigation, and calls to
@@ -31,7 +26,7 @@ proposal.
    - third-party embeds and dynamic content; inspect their visible copy when
      access is available, otherwise record an explicit unresolved boundary;
    - unused or unreachable strings.
-5. Define every quantitative denominator before counting. State sentence
+4. Define every quantitative denominator before counting. State sentence
    boundaries, word-count assumptions, exclusions, and the unit being scored.
    Use a range or a qualitative verdict when the source cannot support a
    reproducible percentage.
@@ -47,8 +42,6 @@ are available. Give every critic:
 
 - the user's exact question;
 - the scope ledger and fixed constraints;
-- the resolved `compose-prose` path, with an instruction to read it completely
-  before analysis;
 - direct access to the current source;
 - one lens below and no other critic's report.
 
@@ -65,8 +58,6 @@ section identifiers for a live site. Each report must contain:
 ### Council seats
 
 1. **Cadence critic**
-   - Map every applicable `compose-prose` rule to
-     `pass | partial | fail | not applicable`.
    - Measure sentence registers only across the declared prose corpus.
    - Separate formal silhouette compliance from the finished musical effect.
    - Identify paragraph arcs, landings, sharp contrasts, breathless clauses,
@@ -113,7 +104,7 @@ the copy changed during the audit, identify the drift, refresh affected evidence
 and denominators, and use one current snapshot for arbitration.
 
 Create a fresh read-only arbiter. Give it the user request, scope ledger, fixed
-constraints, current sources, `compose-prose`, and the complete text of every
+constraints, current sources, and the complete text of every
 critic report. Put the reports in its initial brief or deliver them directly
 after spawning; successful delivery is a prerequisite for arbitration.
 
@@ -139,8 +130,7 @@ Return:
 
 1. **Verdict** — the direct answer, including a defensible score or range only
    when its denominator is explicit.
-2. **Scope and method** — what was reviewed, what was excluded, and how
-   `compose-prose` was applied.
+2. **Scope and method** — what was reviewed and what was excluded.
 3. **Council** — one compact row per critic with its strongest finding.
 4. **Final recommendation** — prioritized changes with grounded, non-binding
    copy directions where useful.
@@ -152,7 +142,6 @@ Return:
    scoped worktree diff remained unchanged. Attribute concurrent drift
    separately from council activity.
 
-Finish when every in-scope surface appears in the ledger, every applicable
-`compose-prose` rule has a disposition, every recommendation is evidence-backed
-and constraint-safe, every council conflict is resolved or exposed, and the
-review activity leaves no worktree diff.
+Finish when every in-scope surface appears in the ledger, every recommendation
+is evidence-backed and constraint-safe, every council conflict is resolved or
+exposed, and the review activity leaves no worktree diff.
