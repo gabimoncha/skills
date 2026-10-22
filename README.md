@@ -54,7 +54,9 @@ The Skills CLI excludes these skills during repository discovery. When the
 skill is ready, remove the marker, add it to the marketplace group, and add it
 to the applicable packs.
 
-Run the repository tests with:
+Use Node.js 26.12.1, pinned in `mise.toml`, for the `.mjs` tools.
+The `.node-version` file has the same pin for other version managers.
+Run the repository tests with Bun:
 
 ```sh
 bun run test
