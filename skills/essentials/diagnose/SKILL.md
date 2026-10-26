@@ -16,7 +16,7 @@ Invocation never expands the user's authority. Add behavior-neutral temporary pr
 
 ### 1. Anchor the symptom and scope
 
-Start from the user's concrete anchor: file, route, error, log, screen, branch, artifact, or reproduction step. Record the exact trigger, expected result, visible symptom, relevant runtime identity, and whether product edits are authorized. Consult applicable `CONTEXT.md`, ADRs, architecture notes, glossaries, test guidance, existing artifacts, and the current worktree.
+Start from the user's concrete anchor: file, route, error, log, screen, branch, artifact, or reproduction step. Record the exact trigger, expected result, visible symptom, relevant runtime identity, and whether product edits are authorized. Consult applicable `GLOSSARY.md`, ADRs, architecture notes, glossaries, test guidance, existing artifacts, and the current worktree.
 
 Preserve unrelated dirty changes and processes. If the user corrects the trigger, lifecycle, affected component, or symptom, invalidate evidence aimed at the old interpretation and restart from the new anchor.
 
