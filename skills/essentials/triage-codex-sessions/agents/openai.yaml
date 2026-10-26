@@ -1,6 +1,0 @@
-interface:
-  display_name: "Triage Codex Sessions"
-  short_description: "Review unarchived sessions and archive confirmed candidates"
-  default_prompt: "Use $triage-codex-sessions to review this project's unarchived Codex sessions and recommend next steps."
-policy:
-  allow_implicit_invocation: false
