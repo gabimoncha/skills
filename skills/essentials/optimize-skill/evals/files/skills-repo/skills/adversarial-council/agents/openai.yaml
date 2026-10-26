@@ -1,0 +1,7 @@
+interface:
+  display_name: "Adversarial Council"
+  short_description: "Convene independent critics and an arbiter"
+  default_prompt: "Use $adversarial-council to review this task through independent lenses and produce one evidence-backed, adjudicated recommendation."
+
+policy:
+  allow_implicit_invocation: false
