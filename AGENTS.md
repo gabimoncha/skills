@@ -1,33 +1,30 @@
-## Agent skills
+# Agents
 
-### Issue tracker
+This is a single-context repo. `GLOSSARY.md` holds the domain language. Use its terms in code, docs, and replies.
 
-Issues and specs live as local Markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
+## Skill lifecycle
 
-### Triage labels
+A new authored skill moves through two stages, in this order:
 
-The canonical triage labels plus `ready-for-cloud-agent` are used. See `docs/agents/triage-labels.md`.
+1. **Internal Skill.** Create the skill at `skills/<collection>/<skill-name>/SKILL.md`. Give it `name` and `description` frontmatter, and add this marker to the frontmatter:
 
-### Domain docs
+   ```yaml
+   metadata:
+     internal: true
+   ```
 
-This is a single-context repo using root `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`.
+   The marker hides the skill from Skills CLI discovery. To test the skill while it is internal, install it by name:
 
-<!-- context7 -->
-Use the `ctx7` CLI to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service — even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use even when you think you know the answer — your training data may not reflect recent changes. Prefer this over web search for library docs.
+   ```sh
+   npx skills@latest add gabimoncha/skills --skill <skill-name>
+   ```
 
-Do not use for: refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.
+2. **Promotion.** When the owner considers the skill ready, make both changes in the same commit:
+   - Remove the `internal` marker from the frontmatter.
+   - Add `./skills/<collection>/<skill-name>` to the group of its Collection in `.claude-plugin/marketplace.json`.
 
-## Steps
+The Marketplace Manifest lists only Public Skills. An Internal Skill never appears in it.
 
-1. Resolve library: `npx ctx7@latest library <name> "<user's question>"` — use the official library name with proper punctuation (e.g., "Next.js" not "nextjs", "Customer.io" not "customerio", "Three.js" not "threejs")
-2. Pick the best match (ID format: `/org/project`) by: exact name match, description relevance, code snippet count, source reputation (High/Medium preferred), and benchmark score (higher is better). If results don't look right, try alternate names or queries (e.g., "next.js" not "nextjs", or rephrase the question)
-3. Fetch docs: `npx ctx7@latest docs <libraryId> "<user's question>"` — run a separate `docs` command per distinct concept if the question spans multiple topics, unless it's about how they interact
-4. Answer using the fetched documentation
+## Repository Skills
 
-You MUST call `library` first to get a valid ID unless the user provides one directly in `/org/project` format. Use the user's full question as the query — specific and detailed queries return better results than vague single words, but keep each query to a single concept unless the question is about how concepts interact; combined multi-topic queries dilute ranking and return shallow results for each topic. Do not run more than 3 commands per question. Do not include sensitive information (API keys, passwords, credentials) in queries.
-
-For version-specific docs, use `/org/project/version` from the `library` output (e.g., `/vercel/next.js/v14.3.0`).
-
-If a command fails with a quota error, inform the user and suggest `npx ctx7@latest login` or setting `CONTEXT7_API_KEY` env var for higher limits. Do not silently fall back to training data.
-Run Context7 CLI requests outside Codex's default sandbox. If a Context7 CLI command fails with DNS or network errors such as ENOTFOUND, host resolution failures, or fetch failed, rerun it outside the sandbox instead of retrying inside the sandbox.
-<!-- context7 -->
+`.agents/skills/` holds the Repository Skills that maintain this repo, and `.claude/skills/` links to them. They belong to no Collection, so they stay out of the Marketplace Manifest.
