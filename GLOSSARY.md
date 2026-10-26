@@ -4,10 +4,6 @@ This context describes the language used to curate and publish the repository ow
 
 ## Language
 
-**Skill**:
-A reusable set of instructions that extends a compatible agent with a specific capability or workflow.
-_Avoid_: Prompt, command
-
 **Collection**:
 A named grouping of public skills with the same intended pattern of use. A skill belongs to one collection.
 _Avoid_: Category, catalog
@@ -32,9 +28,8 @@ Packs. Its internal marker does not make public repository content private.
 _Avoid_: Private skill, deprecated skill
 
 **Promotion**:
-The deliberate transition of an Internal Skill into a Public Skill after the
-owner considers it ready for normal discovery and installation through a Skill
-Pack.
+The deliberate transition of an Internal Skill into a Public Skill after the owner
+considers it ready for normal discovery and installation through a Skill Pack.
 _Avoid_: Release, deployment
 
 **Marketplace Manifest**:
@@ -42,6 +37,6 @@ The static `.claude-plugin/marketplace.json` file that presents authored
 Collections as separate installer groups. It does not track upstream skills.
 _Avoid_: Skill Pack, collection source
 
-**Repository Tooling**:
+**Repository Skills**:
 Locally installed skills and guidance used to maintain this repository but not authored or published as part of its Collections.
 _Avoid_: Personal skills, internal skills
