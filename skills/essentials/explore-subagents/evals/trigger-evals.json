@@ -1,0 +1,18 @@
+[
+  { "query": "use subagents to map out how auth, payments, and the job scheduler work in this repo. I need file refs for each", "should_trigger": true },
+  { "query": "spin up a few explorers in parallel: one on src/http, one on src/payments, one on src/jobs. what does each module own and what does it depend on?", "should_trigger": true },
+  { "query": "I'm onboarding onto tally tomorrow. can you fan out and answer where config is loaded, how errors get logged, and how the db pool is created? cite files", "should_trigger": true },
+  { "query": "split this across agents: (1) list every cron job, (2) list every outbound HTTP integration, (3) list every env var the service reads", "should_trigger": true },
+  { "query": "get some subagents to check which modules still import the legacy http client, and separately compare what the README claims about ops behaviour against what the code does", "should_trigger": true },
+  { "query": "before I refactor, have parallel agents explore the auth flow and the payments flow and report back with evidence", "should_trigger": true },
+  { "query": "dispatch read-only explorers to answer two things: how outbound http retries work and how failed jobs are retried", "should_trigger": true },
+  { "query": "Research this codebase in parallel with subagents and give me a summary of the architecture with file:line evidence for every claim.", "should_trigger": true },
+  { "query": "where's the default HTTP timeout set?", "should_trigger": false },
+  { "query": "fix refundCharge so it gets retried on a 503 like createCharge does", "should_trigger": false },
+  { "query": "use a subagent to add an Idempotency-Key to refundCharge and write a test for it", "should_trigger": false },
+  { "query": "review src/payments/stripe.ts for correctness bugs", "should_trigger": false },
+  { "query": "explain what getAccessToken in src/auth/session.ts does, line by line", "should_trigger": false },
+  { "query": "write unit tests for runWithRetries in src/jobs/runner.ts", "should_trigger": false },
+  { "query": "what does pg_try_advisory_lock do in postgres, and how is it different from pg_advisory_lock?", "should_trigger": false },
+  { "query": "have a couple of agents argue for and against replacing node-cron with a real job queue, then pick one", "should_trigger": false }
+]

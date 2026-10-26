@@ -1,0 +1,64 @@
+{
+  "skill_name": "explore-subagents",
+  "evals": [
+    {
+      "id": 1,
+      "name": "onboarding-three-areas",
+      "prompt": "I'm new to this repo and on call tomorrow. Use subagents to find out: (1) how access tokens get refreshed, (2) what the outbound HTTP timeout is in production, and (3) when the nightly reconciliation job runs and what stops two instances running it at once. Give me file:line refs.",
+      "expected_output": "Auth: src/auth/session.ts refreshes when 90 seconds or less remain (REFRESH_SKEW_MS), shares one in-flight refresh between concurrent callers, and on a 401 from the refresh call clears the session and throws SessionExpiredError. Timeout: production uses 12,000 ms from src/config/production.ts unless HTTP_TIMEOUT_MS is set; the non-production default is 8,000 ms in src/config/index.ts. The README's 30-second claim is stale, and the 30,000 ms constant in src/legacy/httpClient.ts is deprecated and unused. Reconciliation: src/jobs/schedule.ts schedules '15 3 * * *' in UTC, so 03:15 UTC daily; the README's 02:00 UTC is stale. src/jobs/reconcile.ts takes Postgres advisory lock 4242 through pg_try_advisory_lock in src/jobs/lock.ts, and an instance that cannot take the lock logs and skips.",
+      "files": ["evals/files/tally"],
+      "checks": [
+        { "type": "no_mutation" },
+        { "type": "citations", "min": 3 }
+      ],
+      "assertions": [
+        "States that a refresh starts when 90 seconds or less remain before expiry, citing src/auth/session.ts.",
+        "States that concurrent callers share a single in-flight refresh.",
+        "States that a 401 from the refresh call clears the session and raises SessionExpiredError.",
+        "Gives 12,000 ms (12 s) as the production timeout from src/config/production.ts and notes that HTTP_TIMEOUT_MS overrides it.",
+        "Flags the README's 30-second timeout as stale or contradicted by the code, and does not present the legacy 30,000 ms client as the live production value.",
+        "Gives 03:15 UTC daily as the reconciliation schedule and flags the README's 02:00 UTC as stale or contradicted.",
+        "Explains that a Postgres advisory lock (key 4242, pg_try_advisory_lock) makes a second instance skip the run.",
+        "Separates what the code confirms from what the answer infers, or states that every claim is confirmed by cited code."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "casual-retry-safety",
+      "prompt": "hey, can you have a couple of agents dig through tally in parallel? I need to know how retries work for outbound http calls and for failed background jobs, and whether our payment calls are safe to retry. keep it read-only",
+      "expected_output": "HTTP: src/http/client.ts retries up to 3 times (4 attempts) with exponential backoff from 250 ms, only on 502/503/504 or network TypeErrors, and only for GET/PUT/DELETE or a POST that carries an Idempotency-Key header. A timeout aborts the request, and that abort is not retried. Jobs: src/jobs/runner.ts makes up to 5 attempts with a fixed 60-second delay and then records the job in an in-memory dead-letter list. Payments: createCharge sends an Idempotency-Key, so the client may retry it safely; refundCharge is a POST with no Idempotency-Key, so the client never retries it. Reconciliation returns normally when it skips for a held lock or an expired session, so the job runner does not retry those cases.",
+      "files": ["evals/files/tally"],
+      "checks": [
+        { "type": "no_mutation" },
+        { "type": "citations", "min": 3 }
+      ],
+      "assertions": [
+        "States that the HTTP client retries at most 3 times with exponential backoff starting at 250 ms.",
+        "States that only 502, 503, 504 and network errors are retried.",
+        "States that POST requests are retried only when they carry an Idempotency-Key header.",
+        "States that the job runner makes up to 5 attempts with a fixed 60-second delay and then dead-letters the job.",
+        "States that createCharge is safe to retry because it sends an Idempotency-Key.",
+        "States that refundCharge sends no Idempotency-Key, so the client does not retry it.",
+        "Does not claim that a request timeout is retried, or explicitly states that a timeout abort is not retried."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "dependent-chain",
+      "prompt": "Use subagents to figure out which function throws SessionExpiredError, then find every caller of that function, and tell me how each caller handles the error.",
+      "expected_output": "getAccessToken in src/auth/session.ts throws SessionExpiredError when no session exists, and its internal refresh helper throws it on a 401. The callers of getAccessToken are: issueInvoice in src/invoices/service.ts, which does not catch it and lets it propagate; refundCharge in src/payments/stripe.ts, which wraps it in PaymentAuthError; and the locked body of reconcile in src/jobs/reconcile.ts, which logs and aborts the run without rethrowing. createCharge and fetchCharges take a token argument and do not call getAccessToken.",
+      "files": ["evals/files/tally"],
+      "checks": [
+        { "type": "no_mutation" },
+        { "type": "citations", "min": 3 }
+      ],
+      "assertions": [
+        "Identifies getAccessToken in src/auth/session.ts as the function that throws SessionExpiredError, including the no-session case or the 401 refresh case.",
+        "Reports that issueInvoice in src/invoices/service.ts does not catch the error and lets it propagate.",
+        "Reports that refundCharge in src/payments/stripe.ts wraps the error in PaymentAuthError.",
+        "Reports that reconcile in src/jobs/reconcile.ts catches the error, logs, and aborts the run without rethrowing.",
+        "Lists no other function as a direct caller of getAccessToken; createCharge and fetchCharges are not listed as callers."
+      ]
+    }
+  ]
+}
