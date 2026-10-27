@@ -1,4 +1,0 @@
-interface:
-  display_name: "Learn from Code"
-  short_description: "Turn coding sessions into lasting understanding"
-  default_prompt: "Use $learn-from-code."

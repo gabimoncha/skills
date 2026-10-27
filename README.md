@@ -11,8 +11,7 @@ interactively:
 npx skills@latest add gabimoncha/skills
 ```
 
-Use the same interactive flow with `--global` to make the selected skills
-available across projects:
+Add `--global` to make the selected skills available across projects:
 
 ```sh
 npx skills@latest add gabimoncha/skills --global
@@ -25,38 +24,23 @@ npx skills@latest add gabimoncha/skills --global
 | [Essentials](skills/essentials) | Cross-project skills recommended for global installation. |
 | [Frontend Essentials](skills/frontend-essentials) | Skills for frontend and mobile application work. |
 
-The static `.claude-plugin/marketplace.json` manifest presents these folders as
-separate installer groups. Skill Packs combine selected skills into installation
-sets for agents and projects.
+`.claude-plugin/marketplace.json` presents each collection as a separate
+installer group.
 
-## Add an authored skill
+## Add a skill
 
-1. Create the skill under its collection, such as
-   `skills/essentials/<skill-name>/SKILL.md` or
-   `skills/frontend-essentials/<skill-name>/SKILL.md`.
-2. Add at least `name` and `description` frontmatter.
-3. For a public skill, add its directory to the matching group in
-   `.claude-plugin/marketplace.json`.
+1. Create `skills/<collection>/<skill-name>/SKILL.md` with `name` and
+   `description` frontmatter and `metadata.internal: true`. The Skills CLI
+   hides internal skills from discovery.
+2. To test the skill, install it by name:
+   `npx skills@latest add gabimoncha/skills --skill <skill-name>`.
+3. When the skill is ready, promote it. Remove the `internal` marker and add
+   its directory to the matching group in `.claude-plugin/marketplace.json`.
 
-Each skill follows the Agent Skills format: a directory containing a `SKILL.md`
-with `name` and `description` frontmatter. Supporting files and directories
-without a `SKILL.md` are not published.
+## Develop
 
-The collection may contain internal skills. Keep work in progress out of normal
-Skills CLI discovery with:
-
-```yaml
-metadata:
-  internal: true
-```
-
-The Skills CLI excludes these skills during repository discovery. When the
-skill is ready, remove the marker, add it to the marketplace group, and add it
-to the applicable packs.
-
-Use Node.js 26.12.1, pinned in `mise.toml`, for the `.mjs` tools.
-The `.node-version` file has the same pin for other version managers.
-Run the repository tests with Bun:
+`mise.toml` pins the Node.js version for the `.mjs` tools. Run the tests with
+Bun:
 
 ```sh
 bun run test

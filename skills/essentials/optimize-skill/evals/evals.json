@@ -1,0 +1,47 @@
+{
+  "skill_name": "optimize-skill",
+  "evals": [
+    {
+      "id": 1,
+      "name": "plan-model-invoked-target",
+      "prompt": "Work in read-only mode. Design the experiment for improving skills/explore-subagents: it's the skill I use when I want subagents to explore a codebase in parallel, and I'm not sure it does anything the model wouldn't do anyway. Stop before any trial runs and don't spawn agents. Put the whole experiment card, the cases, and the grading plan in your reply.",
+      "expected_output": "A frozen-before-trials plan for a model-invoked, output-only target. It compares a no-skill arm with the current skill (and later a candidate), so it can show whether the skill adds value. It includes a balanced trigger set of should-trigger and near-miss queries run several times each, with part held out. Output cases have realistic prompts, answer keys over a fixture with known facts, a boundary case where delegation is wrong, and both visible and withheld cases. Grading puts deterministic checks (file:line citation validity, no file changes, subagent count from the transcript) before evidence-based model grading, plans more than one trial per arm and case, reads transcripts, and isolates trials from user-level skill installs. The budget is sized from the run count.",
+      "files": ["evals/files/skills-repo"],
+      "checks": [
+        { "type": "no_mutation", "allow": ["workspace/"] },
+        { "type": "subagents", "max": 0 }
+      ],
+      "assertions": [
+        "Plans a no-skill arm (the model without explore-subagents) and compares the current skill against it, not only a current-versus-candidate comparison.",
+        "Plans a trigger set for the description that contains both prompts that should invoke the skill and near-miss prompts that should not.",
+        "The trigger plan runs each query more than once or holds part of the trigger set out for confirmation.",
+        "Each output case has a concrete prompt and an answer key or expected outcome that a grader can check, over a fixture whose correct answers are known.",
+        "Includes at least one boundary case where the skill should not fan out, such as a single lookup or a chain of dependent questions.",
+        "Separates visible cases from withheld confirmation cases.",
+        "Puts deterministic checks, such as citation validity, unchanged files, or subagent count, before model-based grading.",
+        "Plans at least two trials per arm and case, or states a reason for a single trial.",
+        "Makes the no-skill arm real by isolating trials from any user-level or global install of the skill."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "plan-user-invoked-orchestrator",
+      "prompt": "Read-only for now. I want to know whether skills/adversarial-council is worth keeping and how to make it better. Draft the experiment you'd run, but stop before any trial and don't spawn agents. Give me the full card, cases, arms, grading plan, and budget in your reply.",
+      "expected_output": "A plan for a user-invoked target that itself spawns critics and an arbiter. It recognizes that the skill cannot trigger on its own, so it plans no description trigger set (or states that one is unnecessary). It compares the skill with a no-skill arm that gets the same request, so it can show what the council adds. Cases have answer keys with planted defects that critics should find, and visible and withheld cases are separated. Its budget counts the nested critic and arbiter agents in every trial, and grading starts with deterministic checks before evidence-based model grading. It does not plan to make the target judge itself.",
+      "files": ["evals/files/skills-repo"],
+      "checks": [
+        { "type": "no_mutation", "allow": ["workspace/"] },
+        { "type": "subagents", "max": 0 }
+      ],
+      "assertions": [
+        "Recognizes that adversarial-council is user-invoked (disable-model-invocation) and plans no description trigger set, or states that one is unnecessary.",
+        "Plans a no-skill arm that receives the same request without the council, to measure what the skill adds.",
+        "Cases include planted defects or known correct verdicts that the output can be graded against.",
+        "Separates visible cases from withheld confirmation cases.",
+        "Counts the target's own nested critic and arbiter agents in the agent or token budget.",
+        "Puts deterministic or mechanical checks before model-based grading, or states which properties a script verifies.",
+        "Keeps graders independent of the arm under test: graders do not see which arm produced an output."
+      ]
+    }
+  ]
+}

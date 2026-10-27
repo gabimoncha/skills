@@ -1,0 +1,13 @@
+{
+  "name": "tally",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "pg": "^8.11.0"
+  }
+}
