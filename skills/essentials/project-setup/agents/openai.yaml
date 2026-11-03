@@ -1,0 +1,6 @@
+interface:
+  display_name: "Project setup"
+  short_description: "Migrate a project to my stack or start a new one"
+
+policy:
+  allow_implicit_invocation: true
