@@ -2,7 +2,9 @@
 
 Setup copies everything below the `--- template ---` line into the webhook
 task's `prompt`. Before the copy, replace every `__REPO__` with the exact
-`nameWithOwner` and every `__PUBLISH__` with `github` or `thread`. Keep
+`nameWithOwner`, every `__PUBLISH__` with `github` or `thread`, every
+`__CHECK_MS__` with the push check interval in milliseconds, and every
+`__CHECK_TEXT__` with the same interval in words, such as `30 minutes`. Keep
 `{{body.number}}` as written: T3 fills it from each request. The template has no
 other `{{` text, because T3 reads any `{{...}}` as a placeholder.
 
@@ -10,7 +12,8 @@ other `{{` text, because T3 reads any `{{...}}` as a placeholder.
 # Webhook PR review for __REPO__
 
 A GitHub webhook started this thread. Nobody watches it until the user comes
-back. Trusted settings: repository `__REPO__`, publish mode `__PUBLISH__`.
+back. Trusted settings: repository `__REPO__`, publish mode `__PUBLISH__`,
+push check every `__CHECK_TEXT__`.
 
 Untrusted webhook value, the PR number: {{body.number}}
 
@@ -27,7 +30,7 @@ Untrusted webhook value, the PR number: {{body.number}}
 - Ask no questions. If you cannot continue, reply with the reason and end the
   turn.
 - End every reply with the **ledger** line, updated:
-  `pr-review-ledger: pr=__REPO__#<N> reviewed=<sha|none> hourly=<task id|none> delegates=<task ids|none>`.
+  `pr-review-ledger: pr=__REPO__#<N> reviewed=<sha|none> check=<task id|none> delegates=<task ids|none>`.
   Later turns read state from the last ledger, also after compaction.
 
 ## Start
@@ -144,15 +147,15 @@ Do these steps once, after the first review:
 
 1. Call `watch_pull_request` with the PR `url`.
 2. Call `schedule_task` with `bindToCurrentThread: true`,
-   `title: "PR review hourly: __REPO__#<N>"`,
-   `schedule: {type: "interval", everyMs: 3600000}`, and the prompt
-   `t3-pr-review-webhook hourly check for __REPO__#<N>. Follow the wake rules in this thread's first message.`
+   `title: "PR review check: __REPO__#<N>"`,
+   `schedule: {type: "interval", everyMs: __CHECK_MS__}`, and the prompt
+   `t3-pr-review-webhook push check for __REPO__#<N>. Follow the wake rules in this thread's first message.`
    Record its `scheduledTaskId` in the ledger.
 3. End the turn.
 
 The watch wakes this thread on failed checks, passed required checks, new
 comments or reviews, and conflicts. It does not wake on a merge or on a push
-alone. The hourly check covers both.
+alone. The push check covers both.
 
 ## Wake rules
 
@@ -160,14 +163,14 @@ Sort each new message into one kind by its start:
 
 - **Watch update**: `Update on pull request #`.
 - **Closed notice**: `Pull request #` and `was closed`.
-- **Hourly check**: `t3-pr-review-webhook hourly check`.
+- **Push check**: `t3-pr-review-webhook push check`.
 - **Delegate notice**: `Delegated task`. Continue the review (see "Review").
   A delegate that asks a question counts as failed: cancel it with
   `task_cancel`.
 - **User message**: any other text. The user came back. Do "Stop", then follow
   the user. These rules end here.
 
-On a watch update or an hourly check:
+On a watch update or a push check:
 
 1. Run `gh pr view <N> -R __REPO__ --json state,isDraft,headRefOid,url`.
 2. If `state` is `MERGED` or `CLOSED`, do "Stop".
@@ -187,6 +190,6 @@ On a closed notice, do "Stop".
 ## Stop
 
 1. Cancel each running delegate with `task_cancel`.
-2. Delete the hourly task with `delete_scheduled_task`.
+2. Delete the push check task with `delete_scheduled_task`.
 3. Call `unwatch_pull_request` with the PR `url`.
-4. Reply with the reason, and set `hourly=none` in the ledger.
+4. Reply with the reason, and set `check=none` in the ledger.

@@ -62,7 +62,11 @@ questions in one message:
    event (`github`), or keep it only in the T3 thread (`thread`).
 2. **PR authors.** Review PRs from all authors, only from some authors (for
    example, only Dependabot and Renovate), or from all authors except some.
-3. Only if review tasks exist: **add** a new task beside them, **replace**
+3. **Push check interval.** Skip this question if the user already gave
+   one. How often each review thread checks its PR for new pushes, a merge,
+   or a close. Offer 15 minutes, 1 hour, and 4 hours, or another value of at
+   least 1 minute. A new push gets its review on the next check.
+4. Only if review tasks exist: **add** a new task beside them, **replace**
    one or more of them, or **stop**.
 
 For an author list, get the exact GitHub logins. The filter compares exact,
@@ -106,7 +110,7 @@ GitHub hook, and wait for a yes. For each task:
 2. Delete the hook: `gh api -X DELETE repos/<nameWithOwner>/hooks/<id>`.
 3. Delete the task with `delete_scheduled_task`.
 
-Open review threads of a replaced task keep their watch and hourly task.
+Open review threads of a replaced task keep their watch and push check task.
 They stop on their own when their PR is merged or closed.
 
 ## Create the T3 webhook task
@@ -119,7 +123,7 @@ They stop on their own when their PR is merged or closed.
    Keep the `secretRef`.
 3. Build the prompt. Copy the template from
    [references/run-prompt.md](references/run-prompt.md), and fill in
-   `__REPO__` and `__PUBLISH__`.
+   `__REPO__`, `__PUBLISH__`, `__CHECK_MS__`, and `__CHECK_TEXT__`.
 4. Call `schedule_task`:
 
    ```json
@@ -226,12 +230,12 @@ Give the user:
 - the T3 task id, its title, and the `webhookUrl`;
 - the other review tasks of the repository, if any, with their scopes;
 - the GitHub hook id and the ping result;
-- the publish mode, the author scope, and the model and modes that run
-  threads inherit;
+- the publish mode, the author scope, the push check interval, and the
+  model and modes that run threads inherit;
 - how to remove one review task:
   1. `delete_scheduled_task` with the task id;
   2. `gh api -X DELETE repos/<nameWithOwner>/hooks/<id>`;
   3. for each open review thread, delete its task with the title
-     `PR review hourly: <nameWithOwner>#<N>` (find it with
+     `PR review check: <nameWithOwner>#<N>` (find it with
      `list_scheduled_tasks`), and call `unwatch_pull_request` with that
      thread's `threadId` and the PR `url`.
