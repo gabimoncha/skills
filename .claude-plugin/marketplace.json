@@ -15,7 +15,9 @@
         "./skills/essentials/adversarial-council",
         "./skills/essentials/diagnose",
         "./skills/essentials/explore-subagents",
-        "./skills/essentials/optimize-skill"
+        "./skills/essentials/optimize-skill",
+        "./skills/essentials/pr",
+        "./skills/essentials/project-setup"
       ]
     },
     {
