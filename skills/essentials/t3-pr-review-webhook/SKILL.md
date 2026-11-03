@@ -1,11 +1,11 @@
 ---
-name: pr-review-webhook
+name: t3-pr-review-webhook
 description: Set up webhook-triggered PR reviews in T3 Code for a GitHub repository. Each new or ready PR gets its own thread that reviews it with read-only delegates, publishes the review, and watches for new pushes. Use when the user asks to set up or automate PR reviews for a repository.
 metadata:
   internal: true
 ---
 
-# PR review webhook
+# T3 PR review webhook
 
 Set up one T3 webhook task and one GitHub repository webhook for a target
 repository. Each matching PR event starts a new thread with the run prompt
@@ -48,14 +48,25 @@ Stop at the first failed check. Tell the user the fix.
 5. Check the review model: `orchestrator_capabilities` with
    `search: "gpt-6.1-sol"` must list it under a Codex provider.
 6. Check for an earlier setup: `list_scheduled_tasks` with the `projectId`.
-   If a task has the title `PR review webhook: <nameWithOwner>`, ask the user
+   If a task has the title `T3 PR review webhook: <nameWithOwner>`, ask the user
    whether to replace it or stop. To replace it, delete it and its GitHub
    hook first (see "Report").
 
-## Ask how to publish
+## Ask the user
 
-Ask the user one question: publish each review as a GitHub review with the
-`COMMENT` event (`github`), or keep it only in the T3 thread (`thread`).
+Ask the user both questions in one message:
+
+1. **Publish mode.** Publish each review as a GitHub review with the `COMMENT`
+   event (`github`), or keep it only in the T3 thread (`thread`).
+2. **PR authors.** Review PRs from all authors, only from some authors (for
+   example, only Dependabot and Renovate), or from all authors except some.
+
+For an author list, get the exact GitHub logins. The filter compares exact,
+case-sensitive text, and bot logins end in `[bot]`, such as
+`dependabot[bot]` and `renovate[bot]`. A self-hosted Renovate uses its own
+app's login. Confirm the logins against recent PR authors. The REST API
+returns them in the same form as the webhook payload:
+`gh api 'repos/<nameWithOwner>/pulls?state=all&per_page=100' --jq '[.[].user.login] | unique'`.
 
 ## Create the T3 webhook task
 
@@ -71,10 +82,10 @@ Ask the user one question: publish each review as a GitHub review with the
 
    ```json
    {
-     "title": "PR review webhook: <nameWithOwner>",
+     "title": "T3 PR review webhook: <nameWithOwner>",
      "projectId": "<projectId>",
      "bindToCurrentThread": false,
-     "clientRequestId": "pr-review-webhook:<nameWithOwner>:<UTC timestamp>",
+     "clientRequestId": "t3-pr-review-webhook:<nameWithOwner>:<UTC timestamp>",
      "prompt": "<filled template>",
      "schedule": {
        "type": "webhook",
@@ -88,7 +99,8 @@ Ask the user one question: publish each review as a GitHub review with the
          { "path": "headers.x-github-event", "op": "equals", "value": "pull_request" },
          { "path": "body.action", "op": "in", "value": ["opened", "reopened", "ready_for_review"] },
          { "path": "body.pull_request.draft", "op": "equals", "value": "false" },
-         { "path": "body.repository.full_name", "op": "equals", "value": "<nameWithOwner>" }
+         { "path": "body.repository.full_name", "op": "equals", "value": "<nameWithOwner>" },
+         <author filters>
        ],
        "dedupe": {
          "replayKey": "{{headers.x-github-delivery}}",
@@ -98,6 +110,15 @@ Ask the user one question: publish each review as a GitHub review with the
      }
    }
    ```
+
+   Replace `<author filters>` with the filters for the user's author answer,
+   or remove it for all authors:
+
+   - Only some authors: one filter,
+     `{ "path": "body.pull_request.user.login", "op": "in", "value": ["dependabot[bot]", "renovate[bot]"] }`.
+   - All except some: one filter per author,
+     `{ "path": "body.pull_request.user.login", "op": "notEquals", "value": "dependabot[bot]" }`.
+     A task takes at most 16 filters, so at most 12 excluded authors.
 
    Make the timestamp once per setup and reuse it for retries. The save
    spends the `secretRef`, and a retry with the same `clientRequestId` keeps
@@ -162,7 +183,8 @@ Give the user:
 
 - the T3 task id, its title, and the `webhookUrl`;
 - the GitHub hook id and the ping result;
-- the publish mode, and the model and modes that run threads inherit;
+- the publish mode, the author scope, and the model and modes that run
+  threads inherit;
 - how to remove the setup:
   1. `delete_scheduled_task` with the task id;
   2. `gh api -X DELETE repos/<nameWithOwner>/hooks/<id>`;

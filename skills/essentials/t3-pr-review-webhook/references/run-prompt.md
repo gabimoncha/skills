@@ -51,7 +51,7 @@ Untrusted webhook value, the PR number: {{body.number}}
 6. Pick the review range. In `github` mode, find your last earlier review:
    `gh api repos/__REPO__/pulls/<N>/reviews --paginate`, kept to reviews whose
    `user.login` equals `gh api user --jq .login` and whose body contains
-   `<!-- pr-review-webhook -->`. If one exists and its `commit_id` is an
+   `<!-- t3-pr-review-webhook -->`. If one exists and its `commit_id` is an
    ancestor of the head (`git merge-base --is-ancestor`), review only the
    commits after it. Otherwise review the whole PR against
    `git merge-base origin/<baseRefName> HEAD`.
@@ -122,7 +122,7 @@ Merge the results into one review:
 ## Publish
 
 Start the review body with
-`<!-- pr-review-webhook head=<headRefOid> -->`, then one line that names the
+`<!-- t3-pr-review-webhook head=<headRefOid> -->`, then one line that names the
 reviewed range and the model, then the findings.
 
 - `thread` mode: post the review in your reply only.
@@ -146,7 +146,7 @@ Do these steps once, after the first review:
 2. Call `schedule_task` with `bindToCurrentThread: true`,
    `title: "PR review hourly: __REPO__#<N>"`,
    `schedule: {type: "interval", everyMs: 3600000}`, and the prompt
-   `pr-review-webhook hourly check for __REPO__#<N>. Follow the wake rules in this thread's first message.`
+   `t3-pr-review-webhook hourly check for __REPO__#<N>. Follow the wake rules in this thread's first message.`
    Record its `scheduledTaskId` in the ledger.
 3. End the turn.
 
@@ -160,7 +160,7 @@ Sort each new message into one kind by its start:
 
 - **Watch update**: `Update on pull request #`.
 - **Closed notice**: `Pull request #` and `was closed`.
-- **Hourly check**: `pr-review-webhook hourly check`.
+- **Hourly check**: `t3-pr-review-webhook hourly check`.
 - **Delegate notice**: `Delegated task`. Continue the review (see "Review").
   A delegate that asks a question counts as failed: cancel it with
   `task_cancel`.
