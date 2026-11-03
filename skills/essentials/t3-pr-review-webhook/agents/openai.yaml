@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $t3-pr-review-webhook to set up webhook-triggered PR reviews for owner/repo."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
