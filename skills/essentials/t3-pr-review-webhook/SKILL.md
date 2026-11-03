@@ -7,10 +7,13 @@ metadata:
 
 # T3 PR review webhook
 
-Set up one T3 webhook task and one GitHub repository webhook for a target
-repository. Each matching PR event starts a new thread with the run prompt
-from [references/run-prompt.md](references/run-prompt.md). That thread reviews
-the PR, publishes the review, and watches the PR.
+Set up a **review task** for a target repository: one T3 webhook task and its
+own GitHub repository webhook. Each matching PR event starts a new thread with
+the run prompt from [references/run-prompt.md](references/run-prompt.md). That
+thread reviews the PR, publishes the review, and watches the PR.
+
+A repository can have several review tasks, each with its own author scope
+and publish mode. The scopes must not overlap, so each PR gets one thread.
 
 Keep the signing secret out of the transcript. The user enters it only in
 `request_secret` cards. You pass only a `secretRef` or a file path.
@@ -30,36 +33,37 @@ Stop at the first failed check. Tell the user the fix.
    `git -C <workspaceRoot> remote get-url origin` instead.
    - If no project matches, offer to clone it with `t3_project_clone`, then
      register it with `t3_project_create`.
-   - Get this thread's id from `t3_thread_configuration`, then get its
-     `projectId` from `t3_thread_read`. If the project is not this thread's
+   - Get this thread's id from `parentThreadId` in
+     `orchestrator_capabilities`, then get its `projectId` from
+     `t3_thread_read`. If the project is not this thread's
      project, stop. Tell the user to open a thread in that project and invoke
      this skill there. The reason: a `secretRef` works only in the project of
      the thread that asked for it.
 3. Check the run settings. Each run thread gets this thread's model, runtime
-   mode, and interaction mode. Read them with `t3_thread_configuration`.
+   mode, and interaction mode. Read them from `orchestrator_capabilities`.
    `interactionMode` must be `default`. `runtimeMode` must be `auto` or
    `full-access`, because a run thread that waits for an approval stalls with
    nobody there.
-4. Check the base branch. T3 starts each run thread in a new worktree from
-   `main`. In the project's `workspaceRoot`, run
-   `git rev-parse --verify --quiet refs/remotes/origin/main` and, if that
-   fails, `git rev-parse --verify --quiet refs/heads/main`. If neither exists,
-   stop: run threads cannot start.
-5. Check the review model: `orchestrator_capabilities` with
+4. Check the review model: `orchestrator_capabilities` with
    `search: "gpt-6.1-sol"` must list it under a Codex provider.
-6. Check for an earlier setup: `list_scheduled_tasks` with the `projectId`.
-   If a task has the title `T3 PR review webhook: <nameWithOwner>`, ask the user
-   whether to replace it or stop. To replace it, delete it and its GitHub
-   hook first (see "Report").
+5. Find the existing review tasks: `list_scheduled_tasks` with the
+   `projectId`. A review task has `schedule.type` `webhook` and a filter
+   `body.repository.full_name` `equals` `<nameWithOwner>`. Read each one's
+   author scope from its `schedule.filters`, not from its title (see
+   "Author scopes").
 
 ## Ask the user
 
-Ask the user both questions in one message:
+If review tasks exist, list them first: title, author scope, and publish
+mode (the `Trusted settings` line of the task's `prompt`). Then ask all
+questions in one message:
 
 1. **Publish mode.** Publish each review as a GitHub review with the `COMMENT`
    event (`github`), or keep it only in the T3 thread (`thread`).
 2. **PR authors.** Review PRs from all authors, only from some authors (for
    example, only Dependabot and Renovate), or from all authors except some.
+3. Only if review tasks exist: **add** a new task beside them, **replace**
+   one or more of them, or **stop**.
 
 For an author list, get the exact GitHub logins. The filter compares exact,
 case-sensitive text, and bot logins end in `[bot]`, such as
@@ -68,12 +72,50 @@ app's login. Confirm the logins against recent PR authors. The REST API
 returns them in the same form as the webhook payload:
 `gh api 'repos/<nameWithOwner>/pulls?state=all&per_page=100' --jq '[.[].user.login] | unique'`.
 
+## Author scopes
+
+A scope is one of three kinds. Each kind maps to filters on
+`body.pull_request.user.login`:
+
+| Scope | Filters | Title suffix |
+| --- | --- | --- |
+| All authors | none | `(all authors)` |
+| Only `A` | one `in` filter with the list `A` | `(only a1, a2)` |
+| All except `E` | one `notEquals` filter per login in `E` | `(all except e1, e2)` |
+
+Two scopes overlap when one login can match both:
+
+- All authors overlaps every scope.
+- Only `A1` and only `A2` overlap when `A1` and `A2` share a login.
+- Only `A` and all except `E` overlap when a login in `A` is not in `E`.
+- All except `E1` and all except `E2` always overlap.
+
+Compare the new scope with each existing task that stays. Replaced tasks do
+not count. If a scope overlaps, name the task and the logins that match
+both, and ask the user to narrow a scope. A common split is only
+`dependabot[bot], renovate[bot]` in one task, and all except the same
+logins in the other.
+
+## Remove the replaced tasks
+
+Do this only when the user chose replace. Show each task to delete, with its
+GitHub hook, and wait for a yes. For each task:
+
+1. Find its hook:
+   `gh api repos/<nameWithOwner>/hooks --jq '.[] | select(.config.url == "<webhookUrl>") | .id'`.
+2. Delete the hook: `gh api -X DELETE repos/<nameWithOwner>/hooks/<id>`.
+3. Delete the task with `delete_scheduled_task`.
+
+Open review threads of a replaced task keep their watch and hourly task.
+They stop on their own when their PR is merged or closed.
+
 ## Create the T3 webhook task
 
 1. Tell the user to make a random secret in their own terminal or password
    manager, for example with `openssl rand -hex 32`. They paste the same value
    into two cards: card 1 for T3, card 2 for GitHub.
-2. Call `request_secret` with `label: "Webhook secret for <nameWithOwner> (card 1 of 2)"`.
+   Use a new secret for each review task.
+2. Call `request_secret` with `label: "Webhook secret for <title> (card 1 of 2)"`.
    Keep the `secretRef`.
 3. Build the prompt. Copy the template from
    [references/run-prompt.md](references/run-prompt.md), and fill in
@@ -82,7 +124,7 @@ returns them in the same form as the webhook payload:
 
    ```json
    {
-     "title": "T3 PR review webhook: <nameWithOwner>",
+     "title": "T3 PR review webhook: <nameWithOwner> <title suffix>",
      "projectId": "<projectId>",
      "bindToCurrentThread": false,
      "clientRequestId": "t3-pr-review-webhook:<nameWithOwner>:<UTC timestamp>",
@@ -111,14 +153,14 @@ returns them in the same form as the webhook payload:
    }
    ```
 
-   Replace `<author filters>` with the filters for the user's author answer,
-   or remove it for all authors:
+   Replace `<author filters>` with the filters of the scope (see "Author
+   scopes"), or remove it for all authors. For example:
 
-   - Only some authors: one filter,
+   - Only some authors:
      `{ "path": "body.pull_request.user.login", "op": "in", "value": ["dependabot[bot]", "renovate[bot]"] }`.
-   - All except some: one filter per author,
+   - All except some, one filter per login:
      `{ "path": "body.pull_request.user.login", "op": "notEquals", "value": "dependabot[bot]" }`.
-     A task takes at most 16 filters, so at most 12 excluded authors.
+     A task takes at most 16 filters, so at most 12 excluded logins.
 
    Make the timestamp once per setup and reuse it for retries. The save
    spends the `secretRef`, and a retry with the same `clientRequestId` keeps
@@ -145,7 +187,7 @@ If the user says no, ask whether to delete the T3 task or keep it for manual
 setup in the repository's webhook settings.
 
 1. Call `request_secret` with `delivery: "file"` and
-   `label: "Webhook secret for <nameWithOwner> (card 2 of 2, same value)"`.
+   `label: "Webhook secret for <title> (card 2 of 2, same value)"`.
 2. Create the hook. `-F` with `@` reads the value from the file, so the
    secret stays out of the command and its output:
 
@@ -182,10 +224,11 @@ setup in the repository's webhook settings.
 Give the user:
 
 - the T3 task id, its title, and the `webhookUrl`;
+- the other review tasks of the repository, if any, with their scopes;
 - the GitHub hook id and the ping result;
 - the publish mode, the author scope, and the model and modes that run
   threads inherit;
-- how to remove the setup:
+- how to remove one review task:
   1. `delete_scheduled_task` with the task id;
   2. `gh api -X DELETE repos/<nameWithOwner>/hooks/<id>`;
   3. for each open review thread, delete its task with the title
