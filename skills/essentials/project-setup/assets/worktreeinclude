@@ -1,0 +1,24 @@
+# Gitignored files and folders that a new worktree copies from the main
+# checkout (.gitignore syntax). The t3.json setup script copies them with
+# Worktrunk. Claude Code and the Codex app read this file themselves. No tool
+# overwrites a file that the worktree already has.
+#
+# Write a folder as `plans/`, never `plans/*`: Worktrunk copies whole ignored
+# folders. A `!` line inside a listed folder has no effect.
+#
+# Leave out a file that must differ per worktree, such as an env file that
+# holds a port or points at one backend deployment.
+
+# Agent settings and notes
+.claude/settings.local.json
+mise.local.toml
+plans/
+.scratch/
+
+# Env files. `.env` matches the one at the root and the one in each app and
+# package. If one of them must differ per worktree, list the others by path
+# instead, such as `/.env` and `/apps/<app>/.env`.
+.env
+
+# Credentials that no secret manager serves, such as native service files
+# /apps/<app>/google-services.json
