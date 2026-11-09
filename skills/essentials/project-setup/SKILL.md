@@ -52,7 +52,8 @@ lacks, use the table's choice. Add only that layer, in the task's own PR.
    Ask about layers the table doesn't cover. Ask before you create the GitHub
    repo. The first commit on the default branch needs no question.
 2. From day one, the project has:
-   - `mise.toml` with pinned tools and `setup` and `check` tasks
+   - `mise.toml` with pinned tools, `worktrunk` among them, and `setup` and
+     `check` tasks
    - repo config that turns on the global store of the package manager in use,
      so a new worktree or a teammate's clone doesn't download every package
      again
@@ -65,11 +66,12 @@ lacks, use the table's choice. Add only that layer, in the task's own PR.
      deployment. Write a folder as `plans/`, never `plans/*`: Worktrunk
      copies whole ignored folders, so `plans/*` copies nothing, and a `!`
      line inside a listed folder has no effect.
-   - `t3.json`, with a setup script that runs when T3 creates a worktree
-     (`"runOnWorktreeCreate": true`). T3 doesn't read `.worktreeinclude`, so
-     the script's first step is `wt step copy-ignored --require-include`. It
-     copies the listed files from the main checkout and never overwrites a
-     file. Claude Code and the Codex app read `.worktreeinclude` themselves.
+   - `t3.json`, with a `Setup` script that runs when T3 creates a worktree
+     (`"runOnWorktreeCreate": true`). Its command is
+     `wt step copy-ignored --require-include && mise install && mise run setup`.
+     T3 doesn't read `.worktreeinclude`, so `wt` copies the listed files from
+     the main checkout first. It never overwrites a file. Claude Code and the
+     Codex app read `.worktreeinclude` themselves.
    - `.github/pull_request_template.md`, from the `pr` skill's template
    - the docs below
 3. Make one real path work end to end. No sample pages, demo data, or
