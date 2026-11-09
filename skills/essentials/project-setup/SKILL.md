@@ -1,6 +1,8 @@
 ---
 name: project-setup
-description: "Load this skill before you add a layer that a project lacks, such as auth or hosting, migrate a project to the user's stack, replace a layer with the stack's choice, or start a new project. Covers the stack table, what each choice replaces, the migration order, the new-project files, .worktreeinclude, the global package store, the docs layout, and the done checks."
+description: "Load this skill before you add a layer that a project lacks, such as auth or hosting, migrate a project to the user's stack, replace a layer with the stack's choice, or start a new project. Covers the stack table, what each choice replaces, the migration order, the new-project files, .worktreeinclude, the global package store, the file templates, and the done checks."
+metadata:
+  internal: true
 ---
 
 # Project setup
@@ -48,8 +50,7 @@ lacks, use the table's choice. Add only that layer, in the task's own PR.
 
 ## Start a new project
 
-1. Ask which folder: `~/code/personal`, `~/code/work`, or `~/code/client`.
-   Ask about layers the table doesn't cover. Ask before you create the GitHub
+1. Ask about layers the table doesn't cover. Ask before you create the GitHub
    repo. The first commit on the default branch needs no question.
 2. From day one, the project has:
    - `mise.toml` with pinned tools, `worktrunk` among them, and `setup` and
@@ -73,7 +74,8 @@ lacks, use the table's choice. Add only that layer, in the task's own PR.
      the main checkout first. It never overwrites a file. Claude Code and the
      Codex app read `.worktreeinclude` themselves.
    - `.github/pull_request_template.md`, from the `pr` skill's template
-   - the docs below
+   - `AGENTS.md`, and a `CLAUDE.md` that holds only `@AGENTS.md`
+   - the other files in "Templates" that apply
 3. Make one real path work end to end. No sample pages, demo data, or
    placeholder code.
 4. It's done when `mise run setup` and `mise run check` pass. Check this on a
@@ -84,14 +86,22 @@ For a project with a runnable app, also add a `dev` task and one E2E check.
 It's done only when `mise run dev` serves the app and its ready check passes.
 A library, a template, or a skills repo has no `dev` task and no E2E check.
 
-## Docs layout
+## Templates
 
-- `AGENTS.md`: short always-on rules, then pointers such as "Before you do X,
-  read `docs/agents/x.md`". `CLAUDE.md` holds only `@AGENTS.md`.
-- `GLOSSARY.md` and `docs/adr/`: domain terms and decisions, written with the
-  `domain-modeling` skill. Create each one when it gets its first entry. In a
-  migration, `GLOSSARY.md` and `docs/adr/` replace `CONTEXT.md`.
-- `docs/agents/`: how-tos for agents, such as git workflow, dev runtime, and
-  verification.
-- `DESIGN.md` for the visual system of a project with UI, and `PRODUCT.md`
-  for product intent.
+Start each file from its template in this skill's `assets/` folder. Replace
+every `<…>` placeholder with a fact from the project. Delete a section or a
+line that has no fact yet. A file is done when no placeholder is left.
+
+| Project file | Template | Holds |
+| --- | --- | --- |
+| `.worktreeinclude` | `worktreeinclude` | The local files that a new worktree copies from the main checkout. |
+| `t3.json` | `t3.json` | The `Setup` script that T3 runs when it creates a worktree. |
+| `AGENTS.md` | `AGENTS.template.md` | Short always-on rules, then pointers such as "Before you do X, read `docs/agents/x.md`". |
+| `docs/agents/*.md` | `docs/agents/` | How-tos for agents: git workflow, dev runtime, and verification. Add one only when the repo has facts for it. |
+| `GLOSSARY.md` | `GLOSSARY.md` | Domain terms. Create it when it gets its first term. The `domain-modeling` skill owns its rules. |
+| `DESIGN.md` | `DESIGN.md` | The visual system of a project with UI. |
+| `PRODUCT.md` | `PRODUCT.md` | Product intent. |
+
+`docs/adr/` holds decisions and has no template. The `domain-modeling` skill
+owns its format. Create the folder with the first decision. In a migration,
+`GLOSSARY.md` and `docs/adr/` replace `CONTEXT.md`.
