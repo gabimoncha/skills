@@ -57,15 +57,19 @@ lacks, use the table's choice. Add only that layer, in the task's own PR.
      so a new worktree or a teammate's clone doesn't download every package
      again
    - hk hooks and CI
-   - `.worktreeinclude`: the gitignored files that a new worktree copies from
-     the main checkout, in `.gitignore` syntax. List the `.env` files,
-     `.claude/settings.local.json`, `mise.local.toml`, `plans/*`, `.scratch/*`,
+   - `.worktreeinclude`: the gitignored files and folders that a new worktree
+     copies from the main checkout. List the `.env` files,
+     `.claude/settings.local.json`, `mise.local.toml`, `plans/`, `.scratch/`,
      and any other local file the work needs. Leave out a file that must
      differ per worktree, such as an env file that points at one backend
-     deployment.
-   - `t3.json`, whose setup script runs when T3 creates a worktree. T3 doesn't
-     read `.worktreeinclude`, so the setup script copies its entries and never
-     overwrites a file. Claude Code and the Codex app read it themselves.
+     deployment. Write a folder as `plans/`, never `plans/*`: Worktrunk
+     copies whole ignored folders, so `plans/*` copies nothing, and a `!`
+     line inside a listed folder has no effect.
+   - `t3.json`, with a setup script that runs when T3 creates a worktree
+     (`"runOnWorktreeCreate": true`). T3 doesn't read `.worktreeinclude`, so
+     the script's first step is `wt step copy-ignored --require-include`. It
+     copies the listed files from the main checkout and never overwrites a
+     file. Claude Code and the Codex app read `.worktreeinclude` themselves.
    - `.github/pull_request_template.md`, from the `pr` skill's template
    - the docs below
 3. Make one real path work end to end. No sample pages, demo data, or
