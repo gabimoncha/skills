@@ -1,0 +1,7 @@
+interface:
+  display_name: "T3 PR Review Webhook"
+  short_description: "Review each new PR in its own T3 thread"
+  default_prompt: "Use $t3-pr-review-webhook to set up webhook-triggered PR reviews for owner/repo."
+
+policy:
+  allow_implicit_invocation: false
