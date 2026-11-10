@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mise review"
+  short_description: "Plan how a repository can use mise more"
+  default_prompt: "Use $mise-review to find what mise can replace in this repository and give an ordered migration plan."
