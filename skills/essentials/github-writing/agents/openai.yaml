@@ -1,0 +1,7 @@
+interface:
+  display_name: "GitHub writing"
+  short_description: "Write PRs, issues, and comments for the user"
+  default_prompt: "Use $github-writing to write this GitHub issue for me."
+
+policy:
+  allow_implicit_invocation: true
