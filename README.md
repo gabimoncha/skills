@@ -39,7 +39,7 @@ installer group.
 
 ## Develop
 
-`mise.toml` pins the Node.js version for the `.mjs` tools. Run the tests with
+`mise.toml` pins Node.js to `26.13.1` for the `.mjs` tools. Run the tests with
 Bun:
 
 ```sh
