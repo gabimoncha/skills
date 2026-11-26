@@ -14,7 +14,10 @@ Use this template for writing the PR body:
 
 ## What changes
 
-<One diagram with a Before and an After:
+<One short story for each case, in the end user's words: what they do, what
+happened before, and what happens now.>
+
+<One diagram with a Before and an After, labeled in plain words:
 - a state diagram when the system waits for something outside it (a user
   action, a reply from a service or device, a webhook, a timer, a cancel);
   draw the bad events too: timeout, error, cancel, retry
@@ -22,7 +25,10 @@ Use this template for writing the PR body:
 - a flowchart for data flow and how components interact
 - a table or a diff when no diagram fits>
 
-<Up to three bullets for what the diagram misses.>
+### Technical notes
+
+<Up to five bullets for reviewers: code names, internal terms, and edge
+cases.>
 
 ## Before and after
 
@@ -44,13 +50,17 @@ secrets, or production. One or two plain sentences: what breaks, and for whom.>
 
 Skip all preambles and keep prose brief. Use the user's domain language from `GLOSSARY.md`. Delete a section when it has no job in this PR.
 
+Write for the owner and for a reviewer who doesn't know this code. Outside Technical notes, use the words that the product's users use. Put function, class, and event names in Technical notes.
+
 ### Why
 
 One or two sentences: the problem or the goal. Link the issue when there is one.
 
 ### What changes
 
-Show one Before and one After. Pick the smallest view that makes the key point clear. First ask: does the next step wait for something outside the system, which can come late, come wrong, or not come? Outside inputs are a user action, a reply from a service or a device, a webhook, a timer, or a cancel.
+Start with one short story for each case that the PR changes: what the end user does, what happened before, and what happens now. Two or three plain sentences each.
+
+Then show one Before and one After. Label states and arrows in plain words, such as "ad is on screen", not `Measuring` or `resume()`. Pick the smallest view that makes the key point clear. First ask: does the next step wait for something outside the system, which can come late, come wrong, or not come? Outside inputs are a user action, a reply from a service or a device, a webhook, a timer, or a cancel.
 
 - If yes, show it as a Mermaid state diagram. A state is a place where the system waits. An arrow is the event that moves it on. Draw the bad events too: timeout, error, cancel, retry.
 
@@ -64,6 +74,8 @@ stateDiagram-v2
 ```
 
 If no, pick a view from [references/visuals.md](references/visuals.md): pseudocode, a call tree, a component tree, a file tree, a Mermaid flowchart or sequence diagram, or a diff.
+
+End What changes with a "Technical notes" heading, not a collapsible `<details>` block. Delete it when the stories and the diagram say everything.
 
 ### Before and after
 
